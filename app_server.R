@@ -41,7 +41,7 @@ population_climate_1900_2010 <- population_with_region %>% left_join(weather, by
   relocate(Temp_Change, Prcp_Change, .after = Population_Change_Percentage) %>% select(c("City", "ST", "Region", "Population_Change", "Population_Change_Percentage", "Temp_Change", "Prcp_Change", "LAT", "LON")) %>%
   ungroup() %>% arrange(desc(Region), -Population_Change_Percentage)
 
-# Define a server
+# Define server function
 server <- function(input, output) {
   output$boxplot1 <- renderPlot({
     ggplot(population_climate_1900_2010, aes(x = ST, y = Population_Change_Percentage, fill = Temp_Change)) +
@@ -93,27 +93,15 @@ server <- function(input, output) {
            y = "Precipitation Change (mm)") +
       theme_minimal()
   })
-}
-
-shinyApp(ui = ui, server = server)
-
-# Define server function
-server <- function(input, output) { 
+  
   output$chart_3 <- renderPlotly({
     Phonie_dataset <- read.csv("./Phoenix.csv")
     
     Phoniex_plot <- ggplot(data = Phonie_dataset) +
       geom_line(mapping = aes(x = Year, y = Avg.Temp)) +
-      ggtitle("Average Temperature Change for Phoniex")
-    
-    
-    
-    Phoniex_plot
-    
-    
+      ggtitle("Average Temperature Change for Phoenix")
     
     Astoria_CSV <- read.csv('./Astoria.csv');
-    
     
     Astoria_plot <- ggplot(data = Astoria_CSV) +
       geom_line(mapping = aes(x = Year, y = Avg.Temp), color = input$color_input) +
@@ -122,3 +110,5 @@ server <- function(input, output) {
     return(Astoria_plot)
   })
 }
+
+shinyApp(ui = ui, server = server)
