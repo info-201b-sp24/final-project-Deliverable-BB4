@@ -41,37 +41,61 @@ population_climate_1900_2010 <- population_with_region %>% left_join(weather, by
   relocate(Temp_Change, Prcp_Change, .after = Population_Change_Percentage) %>% select(c("City", "ST", "Region", "Population_Change", "Population_Change_Percentage", "Temp_Change", "Prcp_Change", "LAT", "LON")) %>%
   ungroup() %>% arrange(desc(Region), -Population_Change_Percentage)
 
-# Temperature Change vs. Latitude
-tlat_chart <- ggplot(population_climate_1900_2010, aes(x = LAT, y = Temp_Change)) +
-  geom_point(aes(color = Region), alpha = 0.6) +
-  labs(title = "Temperature Change vs. Latitude",
-       x = "Latitude",
-       y = "Temperature Change (°C)") +
-  theme_minimal()
+# Define a server
+server <- function(input, output) {
+  output$boxplot1 <- renderPlot({
+    ggplot(population_climate_1900_2010, aes(x = ST, y = Population_Change_Percentage, fill = Temp_Change)) +
+      geom_boxplot(outlier.shape = 8, outlier.color = "red", outlier.size = 2) + 
+      geom_jitter(width = 0.2, alpha = 0.5, color = "black") +  
+      facet_wrap(~Region, scales = "free_x") + 
+      scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(min(population_climate_1900_2010$Temp_Change), max(population_climate_1900_2010$Temp_Change)), name = "Temp Change") +
+      labs(title = "Population Change Percentage and Temperature Change by State and Region (1900-2010)",
+           subtitle = "Analysis of population dynamics with respect to historical weather changes",
+           x = "State",
+           y = "Population Change Percentage") +
+      theme_tufte(base_size = 14) +  
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8), 
+            strip.text.x = element_text(size = 10, face = "bold"))
+  })
+  
+  output$tlat_chart <- renderPlot({
+    ggplot(population_climate_1900_2010, aes(x = LAT, y = Temp_Change)) +
+      geom_point(aes(color = Region), alpha = 0.6) +
+      labs(title = "Temperature Change vs. Latitude",
+           x = "Latitude",
+           y = "Temperature Change (°C)") +
+      theme_minimal()
+  })
+  
+  output$plat_chart <- renderPlot({
+    ggplot(population_climate_1900_2010, aes(x = LAT, y = Prcp_Change)) +
+      geom_point(aes(color = Region), alpha = 0.6) +
+      labs(title = "Precipitation Change vs. Latitude",
+           x = "Latitude",
+           y = "Precipitation Change (mm)") +
+      theme_minimal()
+  })
+  
+  output$tlon_chart <- renderPlot({
+    ggplot(population_climate_1900_2010, aes(x = LON, y = Temp_Change)) +
+      geom_point(aes(color = Region), alpha = 0.6) +
+      labs(title = "Temperature Change vs. Longitude",
+           x = "Longitude",
+           y = "Temperature Change (°C)") +
+      theme_minimal()
+  })
+  
+  output$plon_chart <- renderPlot({
+    ggplot(population_climate_1900_2010, aes(x = LON, y = Prcp_Change)) +
+      geom_point(aes(color = Region), alpha = 0.6) +
+      labs(title = "Precipitation Change vs. Longitude",
+           x = "Longitude",
+           y = "Precipitation Change (mm)") +
+      theme_minimal()
+  })
+}
 
-# Precipitation Change vs. Latitude
-plat_chart <- ggplot(population_climate_1900_2010, aes(x = LAT, y = Prcp_Change)) +
-  geom_point(aes(color = Region), alpha = 0.6) +
-  labs(title = "Precipitation Change vs. Latitude",
-       x = "Latitude",
-       y = "Precipitation Change (mm)") +
-  theme_minimal()
-
-# Temperature Change vs. Longitude
-tlon_chart <- ggplot(population_climate_1900_2010, aes(x = LON, y = Temp_Change)) +
-  geom_point(aes(color = Region), alpha = 0.6) +
-  labs(title = "Temperature Change vs. Longitude",
-       x = "Longitude",
-       y = "Temperature Change (°C)") +
-  theme_minimal()
-
-# Scatter plot for Precipitation Change vs. Longitude
-plon_chart <- ggplot(population_climate_1900_2010, aes(x = LON, y = Prcp_Change)) +
-  geom_point(aes(color = Region), alpha = 0.6) +
-  labs(title = "Precipitation Change vs. Longitude",
-       x = "Longitude",
-       y = "Precipitation Change (mm)") +
-  theme_minimal()
+shinyApp(ui = ui, server = server)
 
 # Define server function
 server <- function(input, output) { 
