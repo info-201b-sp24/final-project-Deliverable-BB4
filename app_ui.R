@@ -55,8 +55,27 @@ The primary source for this data was a US Census Bureau dataset of ~7500 incorpo
 )
 
 page_two <- tabPanel(
-  "Second page",
-  titlePanel("page 2")
+  "Population Change and Climate",
+  titlePanel("Population Change and Climate"),
+  sidebarLayout(
+    sidebarPanel(
+      p("This section explores the relationship between population change and climate variables.")
+    ),
+    mainPanel(
+      h3("Purpose"),
+      p("The primary purpose of the provided code is to create a box plot visualization that tracks population change percentages in U.S. cities from 1900 to 2010, stratified by region and state. This approach allows for a thorough examination of how demographic shifts have unfolded over more than a century, while simultaneously investigating any potential correlations with changes in climate, indicated by alterations in average temperatures."),
+      h3("Insights"),
+      p("The visualization reveals several key insights:"),
+      tags$ul(
+        tags$li("**Regional and State Variability**: The faceting by region and further stratification by state uncover nuanced patterns in population dynamics that differ significantly from one region to another. This helps in identifying specific regional growth trends and the potential influence of regional policies or economic conditions."),
+        tags$li("**Temperature Correlation**: By using a color gradient to denote temperature changes, the plot suggests a visual correlation between climatic conditions and demographic changes. Warmer colors in areas of significant population increase might imply a relationship between milder climates and urban attractiveness or viability."),
+        tags$li("**Identification of Outliers**: The clear marking of outliers highlights cities with exceptional growth or decline, which can be pivotal for case studies or further research into the causes behind such anomalies, be it economic, environmental, or social drivers.")
+      ),
+      h3("Visualization Type"),
+      p("The choice of a box plot for this analysis is highly effective. Box plots are particularly suited for displaying the distribution of data and identifying outliers, making them ideal for examining the range and spread of population changes across multiple categories (regions and states in this case). The addition of color gradients to represent another variable (temperature change) enhances the multi-dimensional analysis without cluttering the visual space, adhering to Tufte’s principle of maximizing data ink. The faceted layout further aids in dissecting complex patterns by breaking down the dataset into digestible segments, each representing a coherent geographical or administrative unit, thus facilitating deeper comparative analysis. This methodological approach ensures that the visualization is not only informative but also intuitive and accessible, supporting a wide range of academic and planning activities."),
+      plotOutput("boxplot1")
+    )
+  )
 )
 
 page_three <- tabPanel(
