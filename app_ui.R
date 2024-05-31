@@ -108,14 +108,30 @@ that period. Additionally, you can zoom into a specific year for a more detailed
 )
 
 page_four <- tabPanel(
-  "Fourth Page",
-  titlePanel("page 4")
+  "Geographic Analysis",
+  titlePanel("Geographic Analysis"),
+  sidebarLayout(
+    sidebarPanel(
+      p("This section explores the geographic distribution of climate changes.")
+    ),
+    mainPanel(
+      plotOutput("tlat_chart"),
+      plotOutput("plat_chart"),
+      plotOutput("tlon_chart"),
+      plotOutput("plon_chart")
+    )
+  )
 )
 
 page_five <- tabPanel(
   "Conclusion",
-  titlePanel("Page 5")
-)
+  titlePanel("Conclusion"),
+  h3("Summary and Takeaways"),
+  p("This project comprehensively analyzed the relationship between climate change, urbanization, and demographics in over 200 U.S. cities from 1900 to 2010. The primary goal was to understand how these factors interact and influence each other, with a particular focus on how climate variables such as temperature and precipitation impact urban population dynamics."),
+  h3("Key Findings"),
+  tags$ul(
+    tags$li("**Temperature and Precipitation Patterns**: The analysis revealed significant variation in temperature and precipitation patterns across different regions. These variations are crucial for understanding regional climate dynamics and their impacts on urban environments."),
+    tags
 
 ui<-fluidPage(
   theme=shinytheme("cerulean"),
